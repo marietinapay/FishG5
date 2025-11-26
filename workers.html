@@ -26,6 +26,7 @@
           <p class="header-subtitle">Track expenses, harvests & transactions</p>
         </div>
       </div>
+      <button class="logout-header-btn" onclick="confirmLogout()"><i class="fa-solid fa-right-from-bracket logout-icon"></i> Logout</button>
     </div>
   </header>
 
@@ -57,53 +58,52 @@
       <!-- Add Worker Form -->
       <div class="form-section">
         <h3><i class="fa-solid fa-plus"></i> Add New Worker</h3>
-        <form id="worker-form" onsubmit="handleWorkerSubmit(event)">
-          <div class="form-group">
-            <label for="worker-id">Fisherman's ID:</label>
-            <input id="worker-id" class="input" placeholder="Fisherman ID" required />
+        <form id="worker-form" onsubmit="handleWorkerSubmit(event)" class="form-with-picture">
+          <div class="form-left">
+            <div class="form-group">
+              <label for="worker-id">ID:</label>
+              <input id="worker-id" class="input" placeholder="ID" required />
+            </div>
+            <div class="form-group">
+              <label for="worker-name">Fisherman:</label>
+              <input id="worker-name" class="input" placeholder="Name" required />
+            </div>
+            <div class="form-group">
+              <label for="worker-age">Age:</label>
+              <input id="worker-age" class="input" type="number" min="0" max="101" required />
+            </div>
+            <div class="form-group">
+              <label for="worker-joined">Date:</label>
+              <input id="worker-joined" class="input" type="date" required />
+            </div>
+            <div class="form-group">
+              <label for="worker-permit">Permits Number:</label>
+              <input id="worker-permit" class="input" placeholder="Permit #" required />
+            </div>
+            <div class="form-group">
+              <label for="worker-similia">Amount of Similia:</label>
+              <input id="worker-similia" class="input" type="number" required />
+            </div>
+            <div class="form-actions">
+              <button class="btn btn-primary" type="submit" id="submit-btn">Save Worker</button>
+              <button class="btn btn-secondary" type="button" id="update-btn" style="display: none;" onclick="handleWorkerUpdate(event)">Update Worker</button>
+              <button class="btn btn-danger" type="button" id="cancel-btn" style="display: none;" onclick="cancelEdit()">Cancel</button>
+            </div>
           </div>
-          <div class="form-group">
-            <label for="worker-name">Full Name:</label>
-            <input id="worker-name" class="input" placeholder="Name" required />
-          </div>
-          <div class="form-group">
-            <label for="worker-age">Age:</label>
-            <input id="worker-age" class="input" type="number" required />
-          </div>
-          <div class="form-group">
-            <label for="worker-joined">Joined Date:</label>
-            <input id="worker-joined" class="input" type="date" required />
-          </div>
-          <div class="form-group">
-            <label for="worker-permit">Permit Number:</label>
-            <input id="worker-permit" class="input" placeholder="Permit #" required />
-          </div>
-          <div class="form-group">
-            <label for="worker-similia">Amount of Similia:</label>
-            <input id="worker-similia" class="input" type="number" required />
-          </div>
-          <div class="form-group">
-            <label for="worker-picture">Insert Picture:</label>
-            <div class="picture-upload">
-              <input id="worker-picture" class="input" type="hidden" />
-              <div id="picture-preview" class="picture-preview" onclick="document.getElementById('picture-input').click()">
-                <i class="fa-solid fa-image"></i>
-                <p>Click to upload or paste image URL</p>
-              </div>
-              <input type="file" id="picture-input" style="display: none;" accept="image/*" onchange="handlePictureUpload(event)" />
-              <div class="picture-url-section">
-                <label>Or paste image URL:</label>
-                <div class="url-input-group">
-                  <input id="picture-url-input" class="input" placeholder="Paste image URL here" />
-                  <button type="button" class="btn btn-secondary" onclick="updatePictureFromUrl()">Load</button>
+
+          <div class="form-right">
+            <div class="form-group picture-section">
+              <label for="worker-picture">Picture:</label>
+              <div class="picture-upload">
+                <input id="worker-picture" class="input" type="hidden" />
+                <div id="picture-preview" class="picture-preview" onclick="document.getElementById('picture-input').click()">
+                  <i class="fa-solid fa-image"></i>
+                  <p>Click to upload or paste image URL</p>
+                </div>
+                <input type="file" id="picture-input" style="display: none;" accept="image/*" onchange="handlePictureUpload(event)" />
                 </div>
               </div>
             </div>
-          </div>
-          <div class="form-actions">
-            <button class="btn btn-primary" type="submit" id="submit-btn">Save Worker</button>
-            <button class="btn btn-secondary" type="button" id="update-btn" style="display: none;" onclick="handleWorkerUpdate(event)">Update Worker</button>
-            <button class="btn btn-danger" type="button" id="cancel-btn" style="display: none;" onclick="cancelEdit()">Cancel</button>
           </div>
         </form>
       </div>
@@ -115,11 +115,11 @@
           <table class="workers-table">
             <thead>
               <tr>
-                <th>Fisherman ID</th>
-                <th>Full Name</th>
+                <th>ID</th>
+                <th>Fisherman</th>
                 <th>Age</th>
-                <th>Joined Date</th>
-                <th>Permit Number</th>
+                <th>Date</th>
+                <th>Permits Number</th>
                 <th>Similia</th>
                 <th>Picture</th>
                 <th>Actions</th>

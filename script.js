@@ -27,13 +27,20 @@ function updatePictureFromUrl() {
 
 function displayPicture(source) {
   const preview = document.getElementById('picture-preview');
-  preview.innerHTML = `<img src="${source}" alt="Worker Picture" class="preview-image" onload="this.parentElement.classList.add('has-image')" onerror="showPictureError()" />`;
+  preview.classList.add('has-image');
+  // Insert an img element with a class so CSS can size it to the preview box
+  preview.innerHTML = `<img src="${source}" alt="Worker Picture" class="picture-preview-img" onload="this.parentElement.classList.add('has-image')" onerror="showPictureError()" />`;
 }
 
 function showPictureError() {
   alert('Could not load image. Please check the URL or try uploading a file.');
-  document.getElementById('picture-preview').innerHTML = '<i class="fa-solid fa-image"></i><p>Click to upload or paste image URL</p>';
+  document.getElementById('picture-preview').classList.remove('has-image');
+  document.getElementById('picture-preview').innerHTML = '<i class="fa-solid fa-user"></i>';
   document.getElementById('worker-picture').value = '';
+}
+
+function goToHomePage() {
+  location.href = 'index.html';
 }
 
 function editWorker(workerId) {
@@ -44,7 +51,7 @@ function editWorker(workerId) {
   if (!worker) return;
 
   // Populate form with worker data
-  document.getElementById('worker-id').value = worker.id;
+  document.getElementById('worker-id').value = worker.fisherman_id;
   document.getElementById('worker-name').value = worker.name;
   document.getElementById('worker-age').value = worker.age;
   document.getElementById('worker-joined').value = worker.joined_date;
@@ -58,11 +65,11 @@ function editWorker(workerId) {
 
   // Show update button, hide submit button
   document.getElementById('submit-btn').style.display = 'none';
-  document.getElementById('update-btn').style.display = 'inline-block';
-  document.getElementById('cancel-btn').style.display = 'inline-block';
+  document.getElementById('update-btn').style.display = 'inline-flex';
+  document.getElementById('cancel-btn').style.display = 'inline-flex';
 
   // Scroll to form
-  document.querySelector('.form-section').scrollIntoView({ behavior: 'smooth' });
+  document.querySelector('.left-panel').scrollIntoView({ behavior: 'smooth' });
 }
 
 function deleteWorker(workerId) {
@@ -108,25 +115,22 @@ function renderWorkersTable(workers) {
   tbody.innerHTML = '';
 
   if (workers.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="8" class="text-center">No workers found</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="7" class="text-center">No workers found</td></tr>';
     return;
   }
 
   workers.forEach(worker => {
     const row = document.createElement('tr');
     row.innerHTML = `
-      <td>${worker.id}</td>
+      <td>${worker.fisherman_id}</td>
       <td>${worker.name}</td>
       <td>${worker.age}</td>
       <td>${worker.joined_date}</td>
       <td>${worker.permit}</td>
       <td>${worker.similia}</td>
-      <td>
-        ${worker.picture ? `<img src="${worker.picture}" alt="Worker" class="table-thumbnail" />` : 'No image'}
-      </td>
       <td class="action-buttons">
-        <button class="btn btn-sm btn-info" onclick="editWorker(${worker.id})"><i class="fa-solid fa-edit"></i> Edit</button>
-        <button class="btn btn-sm btn-danger" onclick="deleteWorker(${worker.id})"><i class="fa-solid fa-trash"></i> Delete</button>
+        <button class="btn-sm btn-edit" onclick="editWorker(${worker.id})" title="Edit"><i class="fa-solid fa-edit"></i></button>
+        <button class="btn-sm btn-delete" onclick="deleteWorker(${worker.id})" title="Delete"><i class="fa-solid fa-trash"></i></button>
       </td>
     `;
     tbody.appendChild(row);
@@ -171,7 +175,8 @@ function handleWorkerUpdate(event) {
   
   const formData = new FormData();
   formData.append('action', 'update');
-  formData.append('id', document.getElementById('worker-id').value);
+  formData.append('id', editingWorkerId);
+  formData.append('fisherman_id', document.getElementById('worker-id').value);
   formData.append('name', document.getElementById('worker-name').value);
   formData.append('age', document.getElementById('worker-age').value);
   formData.append('joined_date', document.getElementById('worker-joined').value);
@@ -205,8 +210,9 @@ function cancelEdit() {
 
 function resetForm() {
   document.getElementById('worker-form').reset();
-  document.getElementById('picture-preview').innerHTML = '<i class="fa-solid fa-image"></i><p>Click to upload or paste image URL</p>';
-  document.getElementById('submit-btn').style.display = 'inline-block';
+  document.getElementById('picture-preview').classList.remove('has-image');
+  document.getElementById('picture-preview').innerHTML = '<i class="fa-solid fa-user"></i>';
+  document.getElementById('submit-btn').style.display = 'inline-flex';
   document.getElementById('update-btn').style.display = 'none';
   document.getElementById('cancel-btn').style.display = 'none';
   editingWorkerId = null;
@@ -216,6 +222,15 @@ function resetForm() {
 document.addEventListener('DOMContentLoaded', function() {
   loadWorkers();
 });
+
+// ================= LOGOUT =================
+function confirmLogout() {
+  const ok = confirm('Are you sure you want to logout?');
+  if (ok) {
+    // Redirect to login page
+    location.href = 'login.html';
+  }
+}
 
 // ================= EXPENSE FUNCTIONS =================
 function handleExpenseSubmit(event) {
