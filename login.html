@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="FishTracker Pro - Secure login for fishing operation management" />
+  <title>Login - FishTracker Pro</title>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Inter', sans-serif; }
+    body { 
+      /* Show the full image without cropping or zooming; keep centered */
+      background-image: url('./bg/majestic-back-view-fisherman-boat-sailing.jpg');
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-size: cover;
+
+      color:#1f2937; 
+      min-height:100vh; 
+      display:flex; 
+      align-items:center; 
+      justify-content:center; }
+
+    .login-container { display:flex; align-items:center; justify-content:center; width:100%; padding:2rem; }
+
+    .glass-card {
+      background:#ffffffb4; border-radius:1rem; box-shadow:0 8px 20px rgba(0,0,0,0.1);
+      padding:2rem; width:100%; max-width:400px; transition:transform 0.2s, box-shadow 0.2s;
+    }
+    .glass-card:hover { transform:translateY(-3px); box-shadow:0 12px 25px rgba(0,0,0,0.15); }
+
+    .text-center { text-align:center; margin-bottom:2rem; }
+    .text-center i.fa-fish { color:#2563eb; font-size:3rem; margin-bottom:1rem; }
+    .text-text-primary { color:#111827; font-weight:bold; font-size:1.75rem; }
+    .text-text-secondary { color:#0015ff; font-size:1rem; }
+
+    .input { width:100%; padding:0.75rem 1rem; border:1px solid #d1d5db; border-radius:0.5rem; font-size:1rem; outline:none; transition:border-color 0.2s, box-shadow 0.2s; }
+    .input:focus { border-color:#2563eb; box-shadow:0 0 0 3px rgba(37,99,235,0.2); }
+
+    /* Utility classes (small subset of spacing/position helpers used in markup) */
+    .relative { position: relative; }
+    .absolute { position: absolute; }
+    .left-3 { left: 0.75rem; }
+    .top-3 { top: 0.75rem; }
+    .pl-10 { padding-left: 2.5rem; }
+    .pr-10 { padding-right: 2.5rem; }
+    /* Error text styling used by validation messages */
+    .text-error-600 { color: #b91c1c; }
+
+    /* Highlight input when validation fails */
+    .input-error { border-color: #b91c1c !important; box-shadow: 0 0 0 3px rgba(185,28,28,0.12); }
+    .mb-8 { margin-bottom: 2rem; }
+    .mb-1 { margin-bottom: 0.25rem; }
+    .flex { display:flex; }
+    .items-center { align-items:center; }
+    .justify-between { justify-content:space-between; }
+
+    .label { display:block; margin-bottom:0.25rem; font-weight:500; }
+
+    .btn-primary, .btn-login {
+      display:inline-flex; align-items:center; justify-content:center;
+      color:#fff; font-weight:600; border:none; border-radius:0.5rem;
+      cursor:pointer; padding:0.75rem; font-size:1rem; width:100%; margin-top:1rem; transition:background-color 0.2s, box-shadow 0.2s;
+    }
+    .btn-primary { background-color:#2563eb; }
+    .btn-primary:hover { background-color:#1d4ed8; box-shadow:0 5px 15px rgba(0,0,0,0.15); }
+    .btn-primary:disabled { background-color:#93c5fd; cursor:not-allowed; box-shadow:none; }
+
+    .btn-login { background-color:#10b93a; }
+    .btn-login:hover { background-color:#059630; }
+
+    #error-message { display:none; align-items:center; gap:0.5rem; font-size:0.875rem; background:#fee2e2; border:1px solid #fca5a5; padding:0.75rem; border-radius:0.5rem; color:#b91c1c; margin-bottom:1rem; }
+
+    #toggle-password { background:transparent; border:none; cursor:pointer; position:absolute; right:0.75rem; top:0.75rem; }
+    #toggle-password i { font-size:1rem; color:#6b7280; }
+
+    input[type='checkbox'] { accent-color:#2563eb; }
+    a { color:#2563eb; text-decoration:none; }
+    a:hover { text-decoration:underline; }
+    /* Specific color for the forgot-password link requested by user */
+    #forgot-password-link { color: #0015ff; }
+
+    .text-xs { font-size:0.75rem; color:#6b7280; margin-top:1.5rem; text-align:center; }
+    .text-xs span { margin-right:1rem; display:inline-flex; align-items:center; }
+    .text-xs i { margin-right:0.25rem; color:#22c55e; }
+
+    footer { margin-top:1.5rem; text-align:center; font-size:0.75rem; color:#000000; }
+
+    @media (max-width:480px) {
+      .glass-card { padding:1.5rem; }
+      .text-center i.fa-fish { font-size:2.5rem; }
+      .text-text-primary { font-size:1.5rem; }
+    }
+
+  </style>
+</head>
+
+<body>
+  <div class="login-container">
+    <div class="glass-card">
+
+      <!-- Header -->
+      <div class="text-center mb-8">
+        <i class="fa-solid fa-fish"></i>
+        <h1 class="text-text-primary mb-1">FishTracker Pro</h1>
+        <p class="text-text-secondary">Fishing Operation Management System</p>
+      </div>
+
+      <!-- Error Message -->
+      <div id="error-message">
+        <i class="fa-solid fa-circle-exclamation"></i>
+        <span id="error-text">Invalid credentials</span>
+      </div>
+
+      <!-- Login Form -->
+      <form id="login-form" novalidate>
+
+        <div>
+          <label for="email" class="label">Email Address <span class="text-error-600">*</span></label>
+          <div class="relative">
+            <i class="fa-solid fa-envelope absolute left-3 top-3 text-text-secondary"></i>
+            <input type="email" id="email" class="input pl-10" placeholder="owner@gmail.com" />
+          </div>
+          <p id="email-error" class="text-error-600" style="display:none;"></p>
+        </div><br>
+
+        <div>
+          <label for="password" class="label">Password <span class="text-error-600">*</span></label>
+          <div class="relative">
+            <i class="fa-solid fa-lock absolute left-3 top-3 text-text-secondary"></i>
+            <input type="password" id="password" class="input pl-10 pr-10" placeholder="Enter your password" />
+            <button type="button" id="toggle-password">
+              <i id="eye-icon" class="fa-solid fa-eye"></i>
+              <i id="eye-off-icon" class="fa-solid fa-eye-slash" style="display:none;"></i>
+            </button>
+          </div>
+          <p id="password-error" class="text-error-600" style="display:none;"></p>
+        </div><br>
+
+        <div class="flex items-center justify-between text-sm mt-2">
+          <label class="flex items-center space-x-2 cursor-pointer">
+            <input type="checkbox" id="remember-me" />
+            <span>Remember me</span>
+          </label>
+          <a href="#" id="forgot-password-link">Forgot password?</a>
+        </div>
+
+        <!-- Existing Sign In Button -->
+        <button type="submit" class="btn-primary">
+          <span id="btn-text">Sign In</span>
+          <i id="loading-spinner" class="fa-solid fa-spinner fa-spin" style="display:none; margin-left:0.5rem;"></i>
+        </button>
+
+        <!-- New Login Button -->
+        <button type="button" id="login-btn" class="btn-login">Login</button>
+
+      </form>
+
+      <footer>© 2025 FishTracker Pro. All Rights Reserved.</footer>
+    </div>
+  </div>
+
+  <script>
+    const loginForm = document.getElementById('login-form');
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const submitBtn = document.querySelector('.btn-primary');
+    const btnText = document.getElementById('btn-text');
+    const loadingSpinner = document.getElementById('loading-spinner');
+    const errorMessage = document.getElementById('error-message');
+    const errorText = document.getElementById('error-text');
+    const togglePasswordBtn = document.getElementById('toggle-password');
+    const eyeIcon = document.getElementById('eye-icon');
+    const eyeOffIcon = document.getElementById('eye-off-icon');
+    const loginBtn = document.getElementById('login-btn');
+
+    togglePasswordBtn.addEventListener('click', () => {
+      const type = passwordInput.type === 'password' ? 'text' : 'password';
+      passwordInput.type = type;
+      eyeIcon.style.display = eyeIcon.style.display === 'none' ? 'inline' : 'none';
+      eyeOffIcon.style.display = eyeOffIcon.style.display === 'none' ? 'inline' : 'none';
+    });
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    function validateEmail() {
+      const value = emailInput.value.trim();
+      const error = document.getElementById('email-error');
+      // clear previous state
+      emailInput.classList.remove('input-error');
+      if (!value) { error.textContent='Email required'; error.style.display='block'; emailInput.classList.add('input-error'); return false; }
+      if (!emailRegex.test(value)) { error.textContent='Invalid email format'; error.style.display='block'; emailInput.classList.add('input-error'); return false; }
+      error.style.display='none'; emailInput.classList.remove('input-error'); return true;
+    }
+
+    function validatePassword() {
+      const value = passwordInput.value.trim();
+      const error = document.getElementById('password-error');
+      // clear previous state
+      passwordInput.classList.remove('input-error');
+      if (!value) { error.textContent='Password required'; error.style.display='block'; passwordInput.classList.add('input-error'); return false; }
+      if (value.length < 6) { error.textContent='Password must be at least 6 chars'; error.style.display='block'; passwordInput.classList.add('input-error'); return false; }
+      error.style.display='none'; passwordInput.classList.remove('input-error'); return true;
+    }
+
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if(!validateEmail() || !validatePassword()) return;
+
+      submitBtn.disabled = true;
+      btnText.textContent = 'Signing In...';
+      loadingSpinner.style.display='inline';
+      errorMessage.style.display='none';
+
+      setTimeout(() => {
+        const email=emailInput.value.trim();
+        const password=passwordInput.value;
+        if(email==='owner@gmail.com' && password==='owner123'){
+          alert('Sign In successful! Redirecting...');
+          window.location.href='dashboard.html';
+        } else {
+          errorText.textContent='Invalid email or password';
+          errorMessage.style.display='flex';
+          submitBtn.disabled=false;
+          btnText.textContent='Sign In';
+          loadingSpinner.style.display='none';
+        }
+      }, 1200);
+    });
+
+    loginBtn.addEventListener('click', () => {
+      alert('Login button clicked!');
+    });
+
+    // Remove error visuals while user types
+    emailInput.addEventListener('input', () => {
+      emailInput.classList.remove('input-error');
+      const e = document.getElementById('email-error'); if (e) e.style.display='none';
+    });
+    passwordInput.addEventListener('input', () => {
+      passwordInput.classList.remove('input-error');
+      const e = document.getElementById('password-error'); if (e) e.style.display='none';
+    });
+
+    document.getElementById('forgot-password-link').addEventListener('click', e=>{
+      e.preventDefault();
+      alert('Please contact your system administrator to reset your password.');
+    });
+  </script>
+</body>
+</html>
